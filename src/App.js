@@ -1,6 +1,7 @@
 import "./App.css";
 import { Switch, Route, Link } from "react-router-dom";
 import HomePage from "./pages/homepage/homepage.component";
+import ShopPage from "./pages/shop/shop.component.jsx";
 
 const HatsPage = (props) => {
   console.log(props);
@@ -36,9 +37,10 @@ const TopicDetail = (props) => {
 function App() {
   return (
     <div>
-      <Route exact path="/" component={HomePage} />
-      <Route exact path="/hats" component={HatsPage} />
-
+      <Switch>
+        <Route exact path="/" component={HomePage} />
+        <Route path="/shop" component={ShopPage} />
+      </Switch>
       {/* <Route exact path="/topics" component={TopicList} />
       <Route path="/topics/:topicId" component={TopicDetail} /> */}
     </div>
