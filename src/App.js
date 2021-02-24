@@ -1,52 +1,48 @@
+import React from "react";
 import "./App.css";
 import { Switch, Route, Link } from "react-router-dom";
 import HomePage from "./pages/homepage/homepage.component";
 import ShopPage from "./pages/shop/shop.component.jsx";
 import Header from "./components/header/header.component.jsx";
+import SignInAndSignUpPage from "./pages/sign-in-and-sign-up/sign-in-and-sign-up.component";
+import { auth } from "./firebase/firebase.utils";
 
-const HatsPage = (props) => {
-  console.log(props);
-  return (
-    <div>
-      {/* <Link to="./topics">Topics</Link> */}
-      <button onClick={() => props.history.push("./topics")}>Topics</button>
-      <h1>HATS PAGE</h1>
-    </div>
-  );
-};
+class App extends React.Component {
+  constructor() {
+    super();
 
-const TopicList = (props) => {
-  console.log(props);
-  return (
-    <div>
-      <h1>TopicList PAGE</h1>
-      <Link to={`${props.match.url}/13`}>Topics 13</Link>
-      <Link to={`${props.match.url}/17`}>Topics 17</Link>
-      <Link to={`${props.match.url}/21`}>Topics 21</Link>
-    </div>
-  );
-};
+    this.state = {
+      currentUser: null,
+    };
+  }
 
-const TopicDetail = (props) => {
-  console.log(props);
-  return (
-    <div>
-      <h1>TopicDetail Page: {props.match.params.topicId}</h1>
-    </div>
-  );
-};
-function App() {
-  return (
-    <div>
-      <Header />
-      <Switch>
-        <Route exact path="/" component={HomePage} />
-        <Route path="/shop" component={ShopPage} />
-      </Switch>
-      {/* <Route exact path="/topics" component={TopicList} />
-      <Route path="/topics/:topicId" component={TopicDetail} /> */}
-    </div>
-  );
+  unsubscribeFromAuth = null;
+
+  componentDidMount() {
+    this.unsubscribeFromAuth = auth.onAuthStateChanged((user) => {
+      this.setState({ currentUser: user });
+      console.log(user);
+    });
+  }
+
+  componentWillUnmount() {
+    this.unsubscribeFromAuth();
+  }
+
+  render() {
+    return (
+      <div>
+        <Header currentUser={this.state.currentUser} />
+        <Switch>
+          <Route exact path="/" component={HomePage} />
+          <Route path="/shop" component={ShopPage} />
+          <Route path="/signin" component={SignInAndSignUpPage} />
+        </Switch>
+        {/* <Route exact path="/topics" component={TopicList} />
+        <Route path="/topics/:topicId" component={TopicDetail} /> */}
+      </div>
+    );
+  }
 }
 
 export default App;
